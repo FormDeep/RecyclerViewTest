@@ -3,6 +3,8 @@ package com.toporead.recyclerviewtest;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,10 +30,15 @@ public class MainActivity extends AppCompatActivity {
         Button mybtn =findViewById(R.id.mybtn);
 
         EditText editText = findViewById(R.id.edittext);
+        TodoDatabase todoDatabase = Room.databaseBuilder(getApplicationContext(), TodoDatabase.class,"database_name").build();
+        ItemDao itemDao =todoDatabase.itemDao();
 
         RecyclerView recyclerView =findViewById(R.id.myrecyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dataList = new ArrayList<>(Arrays.asList("a","b","c"));
+        for (String str:dataList){
+            itemDao.InsertItemText(new ItemText(str));
+        }
         MyAdapter myAdapter =new MyAdapter(dataList);
         recyclerView.setAdapter(myAdapter);
 
@@ -39,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE ||(event !=null && event.getAction()==KeyEvent.ACTION_DOWN && event.getKeyCode()==KeyEvent.KEYCODE_ENTER)){
+                if ((actionId == EditorInfo.IME_ACTION_DONE ||actionId ==EditorInfo.IME_ACTION_SEND)||(event !=null && event.getAction()==KeyEvent.ACTION_DOWN && event.getKeyCode()==KeyEvent.KEYCODE_ENTER)){
                     mybtn.performClick();
                     return true;
                 }
