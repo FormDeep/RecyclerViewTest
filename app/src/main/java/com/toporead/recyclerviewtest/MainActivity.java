@@ -30,15 +30,10 @@ public class MainActivity extends AppCompatActivity {
         Button mybtn =findViewById(R.id.mybtn);
 
         EditText editText = findViewById(R.id.edittext);
-        TodoDatabase todoDatabase = Room.databaseBuilder(getApplicationContext(), TodoDatabase.class,"database_name").build();
-        ItemDao itemDao =todoDatabase.itemDao();
 
         RecyclerView recyclerView =findViewById(R.id.myrecyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         dataList = new ArrayList<>(Arrays.asList("a","b","c"));
-        for (String str:dataList){
-            itemDao.InsertItemText(new ItemText(str));
-        }
         MyAdapter myAdapter =new MyAdapter(dataList);
         recyclerView.setAdapter(myAdapter);
 
